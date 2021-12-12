@@ -23,7 +23,11 @@ contract SimpleStroage {
         name: "Ben"
     });
 
+    // arrays
     People[] public people;
+
+    // mapping
+    mapping(string => uint256) public nameTopFavNum;
 
 
 
@@ -37,6 +41,7 @@ contract SimpleStroage {
             favNumber: _favNum,
             name: _name
         }));
+        nameTopFavNum[_name] = _favNum;
     }
 
 
