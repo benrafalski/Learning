@@ -37,16 +37,18 @@ contract SimpleStorage {
         favoriteNumber = _favNum;
     }
 
-    function addPerson(string memory _name, uint256 _favNum) public{
-        people.push(People({
-            favNumber: _favNum,
-            name: _name
-        }));
-        nameTopFavNum[_name] = _favNum;
+    // function addPerson(string memory _name, uint256 _favNum) public{
+    //     people.push(People({
+    //         favNumber: _favNum,
+    //         name: _name
+    //     }));
+    //     nameTopFavNum[_name] = _favNum;
+    // }
+
+
+
+    function retrieve() public view returns(uint256){
+        return favoriteNumber;
     }
-
-
-
-
 
 }

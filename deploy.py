@@ -42,7 +42,7 @@ chain_id = 1337
 my_address = "0xf6175c946CD3e70a2A0a507DE788D245498B62fF"
 # never hard code this private key -> use an env var
 private_key = os.getenv("PRIVATE_KEY")
-print(private_key)
+# print(private_key)
 
 # create the contract in python
 SimpleStorage = w3.eth.contract(abi=abi, bytecode=bytecode)
@@ -62,6 +62,35 @@ transaction = SimpleStorage.constructor().buildTransaction(
 
 signed_txn = w3.eth.account.sign_transaction(transaction, private_key=private_key)
 # send the signed transaction
+print("deploying contract...")
 tx_hash = w3.eth.send_raw_transaction(signed_txn.rawTransaction)
+tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+print("deployed!")
+
+# working with the contract, you always need
+# contract address
+# contract abi
+simple_storage = w3.eth.contract(address=tx_receipt.contractAddress, abi= abi)
+# call =  simulate making the call and getting a return value
+# transact = actually make a state change
+print(simple_storage.functions.retrieve().call()) # returns 0 initially
+print(simple_storage.functions.store(15).call()) # doesn't actually store the number, just simulating it with call()
+
+print("updating contract...")
+store_transaction = simple_storage.functions.store(15).buildTransaction({
+    "chainId": chain_id,
+    "gasPrice": w3.eth.gas_price,
+    "from": my_address,
+    "nonce": nonce+1, # must increment here
+})
+
+signed_store_txn = w3.eth.account.sign_transaction(
+    store_transaction, private_key=private_key
+)
+
+store_tx_hash = w3.eth.send_raw_transaction(signed_store_txn.rawTransaction)
+store_tx_receipt = w3.eth.wait_for_transaction_receipt(store_tx_hash)
+print("updated!")
+
 
 
