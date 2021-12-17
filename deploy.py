@@ -37,9 +37,9 @@ bytecode = compiled_sol["contracts"]["simple_storage.sol"]["SimpleStorage"]["evm
 abi = compiled_sol["contracts"]["simple_storage.sol"]["SimpleStorage"]["abi"]
 
 # for connecting to ganache
-w3 = Web3(Web3.HTTPProvider("http://127.0.0.1:7545"))
-chain_id = 5777
-my_address = "0x56FBdD547F14Afa5492067F719860a10B0BFDe4c"
+w3 = Web3(Web3.HTTPProvider("HTTP://127.0.0.1:5000"))
+chain_id = 1337
+my_address = "0xf6175c946CD3e70a2A0a507DE788D245498B62fF"
 # never hard code this private key -> use an env var
 private_key = os.getenv("PRIVATE_KEY")
 print(private_key)
@@ -61,6 +61,7 @@ transaction = SimpleStorage.constructor().buildTransaction(
 )
 
 signed_txn = w3.eth.account.sign_transaction(transaction, private_key=private_key)
-print(signed_txn)
+# send the signed transaction
+tx_hash = w3.eth.send_raw_transaction(signed_txn.rawTransaction)
 
 
