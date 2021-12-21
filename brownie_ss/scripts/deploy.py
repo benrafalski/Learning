@@ -22,5 +22,5 @@ def get_account():
         return accounts.load('test-account')
 
 def main():
-    print(os.getenv("WEB3_INFURA_PROJECT_ID"))
+    # print(os.getenv("WEB3_INFURA_PROJECT_ID"))
     deploy_simple_storage()
