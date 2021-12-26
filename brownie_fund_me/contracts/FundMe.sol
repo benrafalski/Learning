@@ -44,6 +44,13 @@ contract FundMe{
        return uint256(answer * 10000000000);
    }
 
+   function getEntranceFee() public view returns (uint256){
+       uint256 minUSD = 50 * 10**18;
+       uint256 price = getPrice();
+       uint256 precision = 1 * 10**18;
+       return (minUSD * precision) / price;
+   }
+
    function getConversionRate(uint256 ethAmt) public view returns(uint256) {
        uint256 ethPrice  = getPrice();
        uint256 ethAmtInUsd = (ethPrice * ethAmt) / 100000000;
