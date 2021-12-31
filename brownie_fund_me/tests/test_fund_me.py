@@ -1,6 +1,6 @@
 from scripts.helper_functions import LOCAL_BLOCKCHAIN_ENVIORNMENTS, get_account
 from scripts.deploy import deploy_fund_me
-from brownie import network
+from brownie import network, accounts
 import pytest
 
 def test_can_fund_and_withdraw():
@@ -18,3 +18,9 @@ def test_can_fund_and_withdraw():
 def test_only_owner_can_withdraw():
     if network.show_active not in LOCAL_BLOCKCHAIN_ENVIORNMENTS:
         pytest.skip("only for local testing")
+        # account = get_account()
+        fund_me = deploy_fund_me()
+        bad_actor = accounts.add()
+        # someone else tries to withdraw
+        fund_me.withdraw({"from": bad_actor})
+
