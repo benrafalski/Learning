@@ -1,5 +1,5 @@
 dependencies:
-  -smartcontractkit/chainlink-brownie-contracts@1.1.1
+  - smartcontractkit/chainlink-brownie-contracts@1.1.1
 compiler:
   solc:
     remappings:
