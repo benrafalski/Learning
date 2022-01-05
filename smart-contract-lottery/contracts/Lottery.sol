@@ -20,10 +20,10 @@ contract Lottery{
         players.push(msg.sender);
     }
 
-    function getEntranceFee() public {
-        (,int price, ,,,) = ethUsdPriceFeed.latestRoundData;
+    function getEntranceFee() public view returns (uint256){
+        (,int price,,,) = ethUsdPriceFeed.latestRoundData();
         uint256 adjustedPrice = uint256(price) * 10**10;  // 18 decimals
-        uint256 costToEnter = (usdEntryFee * 10 ** 18) / price;
+        uint256 costToEnter = (usdEntryFee * 10 ** 18) / adjustedPrice;
         return costToEnter;
        
     }
