@@ -44,6 +44,6 @@ contract Lottery is Ownable{
     }
 
     function endLottery() public onlyOwner{
-        uint256
+        
     }
 }
