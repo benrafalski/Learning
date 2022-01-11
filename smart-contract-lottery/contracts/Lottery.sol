@@ -10,6 +10,8 @@ import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
 contract Lottery is Ownable, VRFConsumerBase{
 
     address payable[] public players;
+    address payable public recentWinner;
+    uint256 public randomness;
     uint256 public usdEntryFee;
     AggregatorV3Interface internal ethUsdPriceFeed;
 
@@ -51,5 +53,18 @@ contract Lottery is Ownable, VRFConsumerBase{
 
     function endLottery() public onlyOwner{
         lottery_state = LOTTERY_STATE.CALCULATING_WINNER;
+        requestRandomness(keyHash, fee);
+    }
+
+    function fulfillRandomness(bytes32 _requestId, uint256 _randomness) internal override{
+        require(lottery_state == LOTTERY_STATE.CALCULATING_WINNER, "you aren't there yet");
+        require(_randomness > 0, "random-not-found");
+        uint256 indexOfWinner = _randomness % players.length;
+        recentWinner = players[indexOfWinner];
+        recentWinner.transfer(address(this).balance);
+        // reset lottery
+        players = new address payable[](0);
+        lottery_state = LOTTERY_STATE.CLOSED;
+        randomness = _randomness;
     }
 }
