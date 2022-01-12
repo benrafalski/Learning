@@ -1,4 +1,4 @@
-from brownie import network, config, accounts, MockV3Aggregator
+from brownie import network, config, accounts, MockV3Aggregator, Contract
 from brownie_fund_me.scripts.helper_functions import deploy_mocks
 from web3 import Web3
 
@@ -30,17 +30,21 @@ def get_contract(contract_name, ):
     if network.show_active() in LOCAL_BLOCKCHAIN_ENVIORNMENTS:
         if len(contract_type) <= 0:
             deploy_mocks()
-
+        contract = contract_type[-1]
+    else:
+        contract_address = config["networks"][network.show_active()][contract_name]
+        contract = Contract.from_abi(contract_type._name, contract_address, contract_type.abi)
+    return contract
 
 
 
 def deploy_mocks():
 
-    print(f"an active network is {network.show_active()}")
+    # print(f"an active network is {network.show_active()}")
     print("Deploying mocks...")
 
     if len(MockV3Aggregator) <= 0 :
-        mock_aggregator = MockV3Aggregator.deploy(DECIMALS ,Web3.toWei(STARTING_PRICE, "ether"), {"from": get_account()})
+        MockV3Aggregator.deploy(DECIMALS ,Web3.toWei(STARTING_PRICE, "ether"), {"from": get_account()})
     
     print("Mocks deployed...")
     
