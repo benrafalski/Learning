@@ -1,5 +1,4 @@
-from brownie import network, config, accounts, MockV3Aggregator, Contract
-from brownie_fund_me.scripts.helper_functions import deploy_mocks
+from brownie import network, config, accounts, MockV3Aggregator, LinkToken, Contract, VRFCoordinatorMock
 from web3 import Web3
 
 LOCAL_BLOCKCHAIN_ENVIORNMENTS = ["development", "ganache-local"]
@@ -22,7 +21,9 @@ def get_account(index=None, id=None):
     #     return accounts.load('test-wallet')
 
 contract_to_mock = {
-    "eth_usd_price_feed": MockV3Aggregator
+    "eth_usd_price_feed": MockV3Aggregator,
+    "vrf_coordinator": VRFCoordinatorMock,
+    "link_token": LinkToken
 }
 
 def get_contract(contract_name, ):
@@ -43,8 +44,11 @@ def deploy_mocks():
     # print(f"an active network is {network.show_active()}")
     print("Deploying mocks...")
 
+    address = get_account()
+
     if len(MockV3Aggregator) <= 0 :
-        MockV3Aggregator.deploy(DECIMALS ,Web3.toWei(STARTING_PRICE, "ether"), {"from": get_account()})
-    
+        MockV3Aggregator.deploy(DECIMALS ,Web3.toWei(STARTING_PRICE, "ether"), {"from": address})
+        link_token = LinkToken.deploy({"from": address})
+        VRFCoordinatorMock.deploy(link_token.address, {"from": address})
     print("Mocks deployed...")
     
