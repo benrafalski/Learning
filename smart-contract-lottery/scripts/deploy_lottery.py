@@ -17,10 +17,10 @@ def deploy_lottery():
     print("lottery deployed!!")
 
 def start_lottery():
-    account = get_account()
+    account = get_account(id='test-wallet')
     lottery = Lottery[-1]
     starting_txn = lottery.startLottery({"from": account})
-    start_lottery.wait(1)
+    starting_txn.wait(1)
     print("lottery is started!")
 
 def main():
