@@ -17,6 +17,7 @@ def deploy_lottery():
     )
 
     print("lottery deployed!!")
+    return lottery
 
 def start_lottery():
     account = get_account(id='test-wallet')
