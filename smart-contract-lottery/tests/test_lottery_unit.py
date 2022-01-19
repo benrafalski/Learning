@@ -18,3 +18,12 @@ def test_cannot_enter_unless_started():
     lottery = deploy_lottery()
     with pytest.raises(exceptions.VirtualMachineError):
         lottery.enter({"from": get_account(), "value": lottery.getEntranceFee()})
+
+def test_can_start_and_enter_lottery():
+    if network.show_active() not in LOCAL_BLOCKCHAIN_ENVIORNMENTS:
+        pytest.skip()
+    lottery = deploy_lottery()
+    account = get_account()
+    lottery.startLottery({"from": get_account(id='test-wallet')})
+    lottery.enter({"from": account, "value": lottery.getEntranceFee()})
+    assert lottery.players(0) == account
