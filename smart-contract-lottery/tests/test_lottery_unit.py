@@ -1,6 +1,6 @@
 from brownie import Lottery, accounts, config, network, exceptions
 from scripts.deploy_lottery import deploy_lottery
-from scripts.helpful_scripts import LOCAL_BLOCKCHAIN_ENVIORNMENTS, get_account, fund_with_link
+from scripts.helpful_scripts import LOCAL_BLOCKCHAIN_ENVIORNMENTS, get_account, get_contract, fund_with_link
 from web3 import Web3
 import pytest
 
@@ -45,8 +45,21 @@ def test_can_pick_winner_correctly():
     lottery = deploy_lottery();
     account = get_account(id='test-wallet')
     lottery.startLottery({"from": account})
-    lottery.enter({"from": get_account(index=0), "value": lottery.getEntranceFee()})
+    winner = get_account(index=0)
+    lottery.enter({"from": winner, "value": lottery.getEntranceFee()})
     lottery.enter({"from": get_account(index=1), "value": lottery.getEntranceFee()})
     lottery.enter({"from": get_account(index=2), "value": lottery.getEntranceFee()})
     fund_with_link(lottery)
+    transaction = lottery.endLottery({"from": account})
+    # events are helpful for tests
+    request_id = transaction.events['RequestedRandomness']["requestedId"]
+    STATIC_RNG = 777
+    get_contract("vrf_coordinator").callBackWithRandomness(request_id, STATIC_RNG, lottery.address, {"from": account})
     
+    starting_winner_balance = winner.balance()
+    lottery_balance = lottery.balance()
+    assert lottery.recentWinner() == winner
+    assert lottery.balance() == 0
+    assert winner.balance()  == (starting_winner_balance + lottery_balance)
+
+
