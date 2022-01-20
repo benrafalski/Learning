@@ -4,6 +4,7 @@ from brownie import Lottery, network, config
 import time
 
 
+# broken
 def deploy_lottery():
     account = get_account(id='test-wallet')
     lottery = Lottery.deploy(
