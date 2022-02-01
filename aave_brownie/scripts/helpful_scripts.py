@@ -1,7 +1,7 @@
 from brownie import accounts, network
 
-LOCAL_BLOCKCHAIN_ENVIORNMENTS = ["development", "ganache-local"]
-FORKED_LOCAL_ENVIORNMENTS = ["mainnet-fork", "mainnet-fork-dev"]
+LOCAL_BLOCKCHAIN_ENVIORNMENTS = ["development", "ganache-local", "mainnet-fork"]
+# FORKED_LOCAL_ENVIORNMENTS = ["mainnet-fork", "mainnet-fork-dev"]
 
 
 DECIMALS = 8
