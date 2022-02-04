@@ -10,3 +10,7 @@ def main():
     erc20_address = config["networks"][network.show_active()]["weth_token"]
     if network.show_active() in ["mainnet_fork"]:
         get_weth()
+    lending_pool = get_leding_pool()
+
+def get_lending_pool():
+    
