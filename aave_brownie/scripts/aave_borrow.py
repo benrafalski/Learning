@@ -11,7 +11,11 @@ def main():
     if network.show_active() in ["mainnet_fork"]:
         get_weth()
     lending_pool = get_lending_pool()
-    print(lending_pool)
+    approve_erc20()
+
+def approve_erc20(amount, spender, erc20_address, account):
+    print("approving erc20")
+    erc20 = interface.IERC20(erc20_address)
 
 def get_lending_pool():
     lending_pool_addresses_provider = interface.ILendingPoolAddressProvider(
