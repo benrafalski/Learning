@@ -17,6 +17,10 @@ def main():
         get_weth()
     lending_pool = get_lending_pool()
     approve_erc20(amount, lending_pool.address, erc20_address, account)
+    print("depositing")
+    tx = lending_pool.deposit(erc20_address, amount, account.address, 0, {"from": account})
+    tx.wait(1)
+    print("deposited!")
 
 def approve_erc20(amount, spender, erc20_address, account):
     print("approving erc20")
