@@ -12,5 +12,5 @@ def get_account(index=None, id=None):
         return accounts[index]
     if id:
         return accounts.load(id)
-    if (network.show_active() in LOCAL_BLOCKCHAIN_ENVIORNMENTS or network.show_active() in FORKED_LOCAL_ENVIORNMENTS):
+    if (network.show_active() in LOCAL_BLOCKCHAIN_ENVIORNMENTS):
         return accounts[0]

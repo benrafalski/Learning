@@ -13,8 +13,9 @@ amount = Web3.toWei(0.1, "ether")
 def main():
     account = get_account()
     erc20_address = config["networks"][network.show_active()]["weth_token"]
-    if network.show_active() in ["mainnet_fork"]:
-        get_weth()
+    # print(network.show_active())
+    # if network.show_active() in ["mainnet_fork"]:
+    get_weth(ID=None)
     lending_pool = get_lending_pool()
     approve_erc20(amount, lending_pool.address, erc20_address, account)
     print("depositing")
