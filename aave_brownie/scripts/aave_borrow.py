@@ -7,21 +7,32 @@ from scripts.get_weth import get_weth
 from web3 import Web3
 
 # 0.1
-amount = Web3.toWei(0.0000001, "ether")
+amount = Web3.toWei(0.01, "ether")
 
 
 def main():
     account = get_account()
     erc20_address = config["networks"][network.show_active()]["weth_token"]
     # print(network.show_active())
-    # if network.show_active() in ["mainnet_fork"]:
-    get_weth(ID=None)
+    if network.show_active() in ["mainnet-fork"]:
+        get_weth(ID=None)
     lending_pool = get_lending_pool()
     approve_erc20(amount, lending_pool.address, erc20_address, account)
     print("depositing")
     tx = lending_pool.deposit(erc20_address, amount, account.address, 0, {"from": account})
     tx.wait(1)
     print("deposited!")
+    borrowable_eth, total_debt = get_borrowable_data(lending_pool=lending_pool, account=account)
+
+def get_borrowable_data(lending_pool, account):
+    (total_collateral_eth, total_debt_eth, available_borrow_eth, current_liquidation_threshold, ltv, current_health_factor) = lending_pool.getUserAccountData(account.address)
+    available_borrow_eth = Web3.fromWei(available_borrow_eth, "ether")
+    total_collateral_eth = Web3.fromWei(total_collateral_eth, "ether")
+    total_debt_eth = Web3.fromWei(total_debt_eth, "ether")
+    print(f"available to borrow : {available_borrow_eth}")
+    print(f"total collateral : {total_collateral_eth}")
+    print(f"total debt : {total_debt_eth}")
+    return (float(available_borrow_eth), float(total_debt_eth))
 
 def approve_erc20(amount, spender, erc20_address, account):
     print("approving erc20")
