@@ -23,6 +23,17 @@ def main():
     tx.wait(1)
     print("deposited!")
     borrowable_eth, total_debt = get_borrowable_data(lending_pool=lending_pool, account=account)
+    # borrowing dai
+    dia_eth_price = get_assest_price(config["networks"][network.show_active()]["dai_eth_price_feed"])
+
+def get_assest_price(price_feed_address):
+    dai_eth_price_feed = interface.IAggregatorV3(price_feed_address)
+
+   
+    latest_price = dai_eth_price_feed.latestRoundData()[1]
+    print(f"dai/eth price : {latest_price}")
+    return (float(latest_price))
+
 
 def get_borrowable_data(lending_pool, account):
     (total_collateral_eth, total_debt_eth, available_borrow_eth, current_liquidation_threshold, ltv, current_health_factor) = lending_pool.getUserAccountData(account.address)
