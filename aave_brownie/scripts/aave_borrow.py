@@ -29,7 +29,11 @@ def main():
     # borrowable_eth (to)-> borrowable_dai * 95% (watching that health factor)
     amount_dai_to_borrow = (1 / dia_eth_price) * (borrowable_eth * 0.95)
     print(f"borrowing ${amount_dai_to_borrow} in DAI")
-    
+    dai_address = config["networks"][network.show_active()]["dai_token"]
+    borrow_tx = lending_pool.borrow(dai_address, Web3.toWei(amount_dai_to_borrow, "ether"), 1, 0, account.address, {"from": account})
+    borrow_tx.wait(1)
+    print("some DAI has been borrowed")
+    get_borrowable_data(lending_pool=lending_pool, account=account)
 
 def get_assest_price(price_feed_address):
     dai_eth_price_feed = interface.IAggregatorV3(price_feed_address)
