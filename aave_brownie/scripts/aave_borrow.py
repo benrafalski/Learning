@@ -1,6 +1,7 @@
 
 
 
+from dataclasses import dataclass
 from scripts.helpful_scripts import get_account
 from brownie import config, network, interface
 from scripts.get_weth import get_weth
@@ -25,14 +26,19 @@ def main():
     borrowable_eth, total_debt = get_borrowable_data(lending_pool=lending_pool, account=account)
     # borrowing dai
     dia_eth_price = get_assest_price(config["networks"][network.show_active()]["dai_eth_price_feed"])
+    # borrowable_eth (to)-> borrowable_dai * 95% (watching that health factor)
+    amount_dai_to_borrow = (1 / dia_eth_price) * (borrowable_eth * 0.95)
+    print(f"borrowing ${amount_dai_to_borrow} in DAI")
+    
 
 def get_assest_price(price_feed_address):
     dai_eth_price_feed = interface.IAggregatorV3(price_feed_address)
 
    
     latest_price = dai_eth_price_feed.latestRoundData()[1]
-    print(f"dai/eth price : {latest_price}")
-    return (float(latest_price))
+    converted_price = Web3.fromWei(latest_price, "ether")
+    print(f"dai/eth price : {converted_price}")
+    return (float(converted_price))
 
 
 def get_borrowable_data(lending_pool, account):
