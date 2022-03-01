@@ -34,6 +34,14 @@ def main():
     borrow_tx.wait(1)
     print("some DAI has been borrowed")
     get_borrowable_data(lending_pool=lending_pool, account=account)
+    repay_all(amount, lending_pool, account)
+
+
+def repay_all(amount, lending_pool, account):
+    approve_erc20(Web3.toWei(amount, "ether"), lending_pool, config["networks"][network.show_active()]["dai_token"], account)
+    tx = lending_pool.repay(config["networks"][network.show_active()]["dai_token"], amount, 1, account.address, {"from": account})
+    tx.wait(1)
+    print(f"repayed {amount} in dai")
 
 def get_assest_price(price_feed_address):
     dai_eth_price_feed = interface.IAggregatorV3(price_feed_address)
